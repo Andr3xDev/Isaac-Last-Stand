@@ -1,16 +1,14 @@
 # docker-compose testing
 
-version: '3.8'
-
 services:
-  sarabi-frontend-dev:
-    build:
-      context: .
-      target: build
-    container_name: sarabi-frontend-dev
-    ports:
-      - "5173:5173"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    command: npm run dev -- --host
+    isaac-last-stand:
+        build:
+            context: .
+            target: build
+        container_name: isaac-last-stand
+        ports:
+            - "5173:5173"
+        volumes:
+            - .:/app
+            - /app/node_modules
+        command: npm run dev -- --host
