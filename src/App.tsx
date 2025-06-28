@@ -1,11 +1,11 @@
-import { AppRoutes } from './routes.tsx';
+import { AppRoutes } from "./routes.tsx";
 
 function App() {
-  return (
-    <div className="App">
-      <AppRoutes />
-    </div>
-  );
+    return (
+        <div className="App">
+            <AppRoutes />
+        </div>
+    );
 }
 
 export default App;
