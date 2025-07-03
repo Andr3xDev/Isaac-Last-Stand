@@ -1,19 +1,38 @@
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { nanoid } from "nanoid";
 import "../styles/container.css";
-import { useWebSocket } from "../hooks/useWebsocket";
+import { useSocket } from "../context/WebSocketContext";
 
 function Home() {
     const navigate = useNavigate();
-    const { sendMessage } = useWebSocket();
+    const { socket, lobbyState } = useSocket();
+
+    const [playerName, setPlayerName] = useState(
+        sessionStorage.getItem("playerName") || "Guest"
+    );
+
+    useEffect(() => {
+        if (lobbyState && lobbyState.id) {
+            console.log(
+                `[Home] Estado de lobby recibido. Navegando a /lobby/${lobbyState.id}`
+            );
+            sessionStorage.setItem("playerName", playerName);
+            navigate(`/lobby/${lobbyState.id}`);
+        }
+    }, [lobbyState, navigate, playerName]);
 
     const handleCreateLobby = () => {
-        const newRoomCode = nanoid(5).toUpperCase();
-        sendMessage({
-            type: "CREATE_ROOM",
-            roomCode: newRoomCode,
-        });
-        navigate(`/lobby/${newRoomCode}`);
+        if (!playerName) {
+            alert("Por favor, introduce un nombre para crear el lobby.");
+            return;
+        }
+        if (socket) {
+            socket.emit("createLobby", { name: playerName });
+        } else {
+            alert(
+                "Aún no se ha conectado al servidor. Inténtalo de nuevo en un momento."
+            );
+        }
     };
 
     return (
@@ -25,6 +44,13 @@ function Home() {
                     className="w-full my-6"
                 />
                 <div className="container-menu w-11/13 flex-col flex gap-8 justify-center ">
+                    <input
+                        type="text"
+                        value={playerName}
+                        onChange={(e) => setPlayerName(e.target.value)}
+                        placeholder="Introduce tu nombre"
+                        className="text-2xl text-center p-2 rounded-md bg-[#090909] text-white border border-[#402120]"
+                    />
                     <button
                         onClick={handleCreateLobby}
                         className="text-4xl cursor-pointer bg-[#863832] text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-[#402120] transition-all duration-200"
@@ -32,7 +58,7 @@ function Home() {
                         Create Lobby
                     </button>
                     <button
-                        onClick={handleCreateLobby}
+                        onClick={() => navigate("/lobbyhub")}
                         className="text-4xl cursor-pointer bg-[#863832] text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-[#402120] transition-all duration-200"
                     >
                         Join Lobby

@@ -1,5 +1,3 @@
-// src/components/PlayerList.tsx
-
 import React from "react";
 import PlayerListItem from "./PlayerListItem";
 
