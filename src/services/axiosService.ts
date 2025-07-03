@@ -1,15 +1,12 @@
 import axios from "axios";
 
-// Client build
 const apiClient = axios.create({
-    // Recuerda crear un archivo .env con: VITE_API_URL=http://localhost:3000/api
     baseURL: import.meta.env.VITE_API_URL,
     headers: {
         "Content-Type": "application/json",
     },
 });
 
-// Request handler
 apiClient.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("authToken");
@@ -24,10 +21,8 @@ apiClient.interceptors.request.use(
     }
 );
 
-// Response handler
 apiClient.interceptors.response.use(
     (response) => {
-        // Any positive response is returned here
         return response;
     },
     (error) => {
