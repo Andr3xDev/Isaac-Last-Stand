@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PlayerList from "../components/PlayerList";
 import { useSocket } from "../context/WebSocketContext";
 
 const LobbyPage: React.FC = () => {
+    const navigate = useNavigate();
     const { roomCode } = useParams<{ roomCode?: string }>();
-
     const { socket, lobbyState } = useSocket();
 
     useEffect(() => {
@@ -37,6 +37,7 @@ const LobbyPage: React.FC = () => {
     const handleStartGame = () => {
         if (socket && lobbyState && lobbyState.hostId === socket.id) {
             socket.emit("startGame", { lobbyId: lobbyState.id });
+            navigate(`/game/${roomCode}`);
         }
     };
 

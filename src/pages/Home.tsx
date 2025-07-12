@@ -6,7 +6,6 @@ import { useSocket } from "../context/WebSocketContext";
 function Home() {
     const navigate = useNavigate();
     const { socket, lobbyState } = useSocket();
-
     const [playerName, setPlayerName] = useState(
         sessionStorage.getItem("playerName") || "Guest"
     );
